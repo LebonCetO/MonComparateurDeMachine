@@ -81,6 +81,7 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
             padding: 40px;
             position: relative;
+            overflow: hidden;
         }
 
         /* Gestion des étapes (Pages) */
@@ -238,7 +239,7 @@
 
         .form-control::placeholder { color: #94a3b8; }
 
-        /* --- STYLES ÉTAPES FINALES --- */
+        /* --- STYLES ÉTAPE 6 & 8 (Calendrier, Avatars, Confirmation) --- */
         
         .congrats-title {
             font-size: 38px;
@@ -300,7 +301,7 @@
             padding-bottom: 15px;
             scrollbar-width: thin;
             scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch; /* Fluide sur iOS */
+            -webkit-overflow-scrolling: touch; 
         }
 
         .dates-scroll::-webkit-scrollbar { height: 6px; }
@@ -348,8 +349,10 @@
             font-size: 15px;
             cursor: pointer;
             transition: all 0.2s;
+            animation: fadeInStep 0.3s ease-in-out;
         }
 
+        .time-slot:hover { background-color: #eff6ff; }
         .time-slot.selected { background-color: var(--accent-color); color: white; }
 
         /* Animation Succès */
@@ -422,7 +425,7 @@
             text-align: left;
         }
 
-        /* --- ZONE D'ACTION PAR DÉFAUT (DESKTOP) --- */
+        /* --- ZONE D'ACTION --- */
         .action-area {
             display: flex;
             flex-direction: column;
@@ -475,13 +478,12 @@
         }
 
         /* ========================================================= */
-        /* OPTIMISATION MOBILE (UX APP NATIVE)                       */
+        /* OPTIMISATION MOBILE FLUIDE ET SANS SCROLL INUTILE         */
         /* ========================================================= */
         @media (max-width: 600px) {
             body {
                 padding: 0;
-                background-color: var(--card-bg); /* Rend le fond uniforme */
-                padding-bottom: 90px; /* Espace pour le footer sticky */
+                background-color: var(--card-bg); 
             }
 
             .main-header {
@@ -499,17 +501,18 @@
 
             .question-title { font-size: 22px; }
             
-            /* Grille plus compacte sur 2 colonnes pour gagner de la place */
             .options-grid {
+                /* Etape 1 reste sur 2 colonnes */
                 grid-template-columns: 1fr 1fr;
                 gap: 10px;
             }
             
-            #gridStep4 { grid-template-columns: 1fr; } /* Garder 1 colonne pour les choix longs */
+            /* On force l'empilement 1 colonne sur les choix longs ou ceux demandés */
+            #gridStep4 { grid-template-columns: 1fr; }
 
             .option-card {
                 padding: 12px 8px;
-                font-size: 13px;
+                font-size: 14px;
                 border-radius: 8px;
             }
 
@@ -519,18 +522,10 @@
             .avatar { margin-left: -15px; width: 55px; height: 55px; border-width: 2px;}
             .congrats-title { font-size: 28px; }
 
-            /* LE SECRET UX MOBILE : Menu collé en bas (Sticky) */
+            /* Les boutons se calent naturellement sous le contenu (fini l'espace vide !) */
             .action-area {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                background: var(--card-bg);
-                padding: 15px 20px;
-                margin: 0;
-                box-shadow: 0 -4px 15px rgba(0,0,0,0.08);
-                z-index: 100;
-                flex-direction: column-reverse; /* Met l'erreur au-dessus des boutons */
+                margin-top: 20px;
+                flex-direction: column-reverse;
                 align-items: center;
             }
 
@@ -542,14 +537,14 @@
             }
 
             .nav-buttons {
-                flex-direction: row; /* Forcer côte à côte */
-                gap: 10px;
+                flex-direction: row; 
+                width: 100%;
             }
 
             .btn-next, .btn-back {
                 padding: 14px 10px;
                 font-size: 14px;
-                flex: 1; /* Taille égale */
+                flex: 1; 
                 text-align: center;
             }
         }
@@ -572,9 +567,9 @@
             </div>
             <div class="options-grid" id="gridStep1"></div>
             <div class="action-area">
-                <div class="error-message" id="errorMsg1">⚠️ Sélectionnez au moins une technologie.</div>
-                <div class="nav-buttons">
-                    <button class="btn-next" id="nextBtn1" onclick="validateStep1()" style="width: 100%; flex: none;">Continuer</button>
+                <div class="error-message" id="errorMsg1">⚠️ Veuillez sélectionner au moins une technologie.</div>
+                <div class="nav-buttons" style="justify-content: flex-end;">
+                    <button class="btn-next" id="nextBtn1" onclick="validateStep1()" style="flex: none; width: 100%;">Continuer</button>
                 </div>
             </div>
         </div>
@@ -585,9 +580,9 @@
                 <h2 class="question-title">Je suis :</h2>
                 <p class="question-subtitle">Plusieurs sélections possibles.</p>
             </div>
-            <div class="options-grid" id="gridStep2"></div>
+            <div class="options-grid" id="gridStep2" style="grid-template-columns: 1fr;"></div>
             <div class="action-area">
-                <div class="error-message" id="errorMsg2">⚠️ Sélectionnez au moins une option.</div>
+                <div class="error-message" id="errorMsg2">⚠️ Veuillez sélectionner au moins une option.</div>
                 <div class="nav-buttons">
                     <button class="btn-back" onclick="goBackToStep(1)">Retour</button>
                     <button class="btn-next" id="nextBtn2" onclick="validateStep2()">Continuer</button>
@@ -601,9 +596,9 @@
                 <h2 class="question-title">Ma société :</h2>
                 <p class="question-subtitle">Sélectionnez une option.</p>
             </div>
-            <div class="options-grid" id="gridStep3"></div>
+            <div class="options-grid" id="gridStep3" style="grid-template-columns: 1fr;"></div>
             <div class="action-area">
-                <div class="nav-buttons">
+                <div class="nav-buttons" style="justify-content: flex-start;">
                     <button class="btn-back" onclick="goBackToStep(2)">Retour</button>
                 </div>
             </div>
@@ -617,7 +612,7 @@
             </div>
             <div class="options-grid" id="gridStep4" style="grid-template-columns: 1fr;"></div>
             <div class="action-area">
-                <div class="nav-buttons">
+                <div class="nav-buttons" style="justify-content: flex-start;">
                     <button class="btn-back" onclick="goBackToStep(3)">Retour</button>
                 </div>
             </div>
@@ -635,7 +630,7 @@
                 </select>
             </div>
             <div class="action-area">
-                <div class="nav-buttons">
+                <div class="nav-buttons" style="justify-content: flex-start;">
                     <button class="btn-back" onclick="goBackToStep(4)">Retour</button>
                 </div>
             </div>
@@ -672,7 +667,7 @@
             </div>
 
             <div class="action-area">
-                <div class="error-message" id="errorMsg6">⚠️ Choisissez un jour et une heure.</div>
+                <div class="error-message" id="errorMsg6">⚠️ Veuillez choisir un jour et une heure pour continuer.</div>
                 <div class="nav-buttons">
                     <button class="btn-back" onclick="goBackToStep(5)">Retour</button>
                     <button class="btn-next" id="nextBtn6" onclick="validateStep6()">Continuer</button>
@@ -703,7 +698,7 @@
             </div>
 
             <div class="action-area">
-                <div class="error-message" id="errorMsg7">⚠️ Remplissez un nom et un téléphone (10 chiffres).</div>
+                <div class="error-message" id="errorMsg7">⚠️ Veuillez remplir votre nom et un numéro de téléphone valide (10 chiffres min).</div>
                 <div class="nav-buttons">
                     <button class="btn-back" onclick="goBackToStep(6)">Retour</button>
                     <button class="btn-next btn-submit" id="submitBtn" onclick="submitFinalForm()">Terminer</button>
@@ -741,7 +736,7 @@
                 </p>
             </div>
 
-            <div class="action-area" style="position: relative; box-shadow: none; background: transparent; align-items: center; margin-top: 10px;">
+            <div class="action-area" style="align-items: center; margin-top: 10px;">
                 <button class="btn-back" style="background-color: var(--card-bg);" onclick="resetForm()">Retour à l'accueil</button>
             </div>
         </div>
@@ -1084,7 +1079,7 @@
             switchStep(7, 8);
         }
 
-        // Réinitialise le formulaire entier pour revenir au début de manière fluide
+        // Réinitialise le formulaire entier pour revenir au début
         function resetForm() {
             selectedTechs.clear();
             selectedProfs.clear();
@@ -1114,7 +1109,7 @@
         function switchStep(oldStep, newStep) {
             document.getElementById('step' + oldStep).classList.remove('active');
             document.getElementById('step' + newStep).classList.add('active');
-            window.scrollTo(0,0); // Remonte tout en haut à chaque changement de page
+            window.scrollTo(0,0); 
         }
 
         function goBackToStep(stepNumber) {
