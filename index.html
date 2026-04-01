@@ -81,7 +81,6 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
             padding: 40px;
             position: relative;
-            overflow: hidden;
         }
 
         /* Gestion des étapes (Pages) */
@@ -237,11 +236,9 @@
             border-color: var(--accent-color);
         }
 
-        .form-control::placeholder {
-            color: #94a3b8;
-        }
+        .form-control::placeholder { color: #94a3b8; }
 
-        /* --- STYLES ÉTAPE 6 & 8 (Calendrier, Avatars, Confirmation) --- */
+        /* --- STYLES ÉTAPES FINALES --- */
         
         .congrats-title {
             font-size: 38px;
@@ -303,12 +300,12 @@
             padding-bottom: 15px;
             scrollbar-width: thin;
             scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch; /* Fluide sur iOS */
         }
 
         .dates-scroll::-webkit-scrollbar { height: 6px; }
         .dates-scroll::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
         .dates-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        .dates-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
         .date-card {
             flex: 0 0 auto; 
@@ -329,12 +326,7 @@
         .date-card .day-name { font-size: 13px; color: #64748b; text-transform: uppercase; font-weight: 600; }
         .date-card .day-number { font-size: 22px; color: var(--primary-color); font-weight: 800; }
         .date-card .month-name { font-size: 13px; color: #64748b; }
-
-        .date-card:hover { border-color: var(--hover-border); }
-        .date-card.selected {
-            border-color: var(--accent-color);
-            background-color: var(--accent-color);
-        }
+        .date-card.selected { border-color: var(--accent-color); background-color: var(--accent-color); }
         .date-card.selected .day-name, .date-card.selected .day-number, .date-card.selected .month-name { color: white; }
 
         .times-grid {
@@ -356,13 +348,11 @@
             font-size: 15px;
             cursor: pointer;
             transition: all 0.2s;
-            animation: fadeInStep 0.3s ease-in-out;
         }
 
-        .time-slot:hover { background-color: #eff6ff; }
         .time-slot.selected { background-color: var(--accent-color); color: white; }
 
-        /* --- ANIMATION DE SUCCÈS (FESTIVE & ÉLÉGANTE) --- */
+        /* Animation Succès */
         .success-icon-wrapper {
             position: relative;
             width: 90px;
@@ -395,34 +385,19 @@
 
         .success-ripple {
             position: absolute;
-            top: 50%;
-            left: 50%;
+            top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 100%;
-            height: 100%;
+            width: 100%; height: 100%;
             background-color: var(--success-color);
             border-radius: 50%;
-            z-index: 1;
-            opacity: 0.5;
+            z-index: 1; opacity: 0.5;
             animation: ripple 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
         }
 
-        @keyframes bounceIn {
-            0% { transform: scale(0.3); opacity: 0; }
-            50% { transform: scale(1.1); opacity: 1; }
-            100% { transform: scale(1); opacity: 1; }
-        }
+        @keyframes bounceIn { 0% { transform: scale(0.3); opacity: 0; } 50% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes dash { to { stroke-dashoffset: 0; } }
+        @keyframes ripple { 0% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; } 100% { transform: translate(-50%, -50%) scale(2); opacity: 0; } }
 
-        @keyframes dash {
-            to { stroke-dashoffset: 0; }
-        }
-
-        @keyframes ripple {
-            0% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
-            100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
-        }
-
-        /* Styles spécifiques Étape 8 (Confirmation) */
         .success-box {
             background-color: var(--success-bg);
             border: 2px solid var(--success-border);
@@ -434,19 +409,8 @@
             width: 100%;
         }
 
-        .success-text {
-            font-size: 16px;
-            color: var(--success-text);
-            font-weight: 500;
-            line-height: 1.6;
-            margin: 0;
-        }
-
-        .highlight-data {
-            font-size: 18px;
-            font-weight: 800;
-            color: #15803d; 
-        }
+        .success-text { font-size: 16px; color: var(--success-text); font-weight: 500; line-height: 1.6; margin: 0; }
+        .highlight-data { font-size: 18px; font-weight: 800; color: #15803d; }
 
         .tip-box {
             background-color: #eff6ff;
@@ -458,7 +422,7 @@
             text-align: left;
         }
 
-        /* Zone d'action */
+        /* --- ZONE D'ACTION PAR DÉFAUT (DESKTOP) --- */
         .action-area {
             display: flex;
             flex-direction: column;
@@ -471,49 +435,33 @@
             width: 100%;
             justify-content: space-between;
             align-items: center;
+            gap: 15px;
         }
 
-        .btn-back {
-            background-color: transparent;
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
+        .btn-back, .btn-next {
             border-radius: 8px;
-            padding: 16px 24px;
+            padding: 16px 32px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
         }
 
-        .btn-back:hover {
-            background-color: var(--bg-color);
-            border-color: var(--hover-border);
+        .btn-back {
+            background-color: transparent;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
         }
 
         .btn-next {
             background-color: var(--primary-color);
             color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 16px 32px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s, opacity 0.2s;
             opacity: 0.5;
             pointer-events: none;
         }
 
-        .btn-next.active {
-            background-color: var(--accent-color); 
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .btn-next.active:hover { background-color: #2563eb; }
-        
+        .btn-next.active { background-color: var(--accent-color); opacity: 1; pointer-events: auto; }
         .btn-submit.active { background-color: var(--success-color); }
-        .btn-submit.active:hover { background-color: #059669; }
 
         .error-message {
             color: var(--error-color);
@@ -526,15 +474,84 @@
             text-align: right;
         }
 
+        /* ========================================================= */
+        /* OPTIMISATION MOBILE (UX APP NATIVE)                       */
+        /* ========================================================= */
         @media (max-width: 600px) {
-            .main-header h1 { font-size: 28px; }
-            .funnel-container { padding: 20px; }
-            .options-grid { grid-template-columns: 1fr; }
-            .congrats-title { font-size: 32px; }
-            .congrats-subtitle { font-size: 16px; }
-            .nav-buttons { flex-direction: column-reverse; gap: 15px; }
-            .btn-next, .btn-back { width: 100%; justify-content: center; }
-            .avatar { margin-left: -15px; width: 65px; height: 65px; }
+            body {
+                padding: 0;
+                background-color: var(--card-bg); /* Rend le fond uniforme */
+                padding-bottom: 90px; /* Espace pour le footer sticky */
+            }
+
+            .main-header {
+                margin-bottom: 10px;
+                padding-top: 20px;
+            }
+            .main-header h1 { font-size: 24px; }
+            .main-header .main-subtitle { font-size: 14px; }
+
+            .funnel-container {
+                padding: 15px;
+                box-shadow: none;
+                border-radius: 0;
+            }
+
+            .question-title { font-size: 22px; }
+            
+            /* Grille plus compacte sur 2 colonnes pour gagner de la place */
+            .options-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            
+            #gridStep4 { grid-template-columns: 1fr; } /* Garder 1 colonne pour les choix longs */
+
+            .option-card {
+                padding: 12px 8px;
+                font-size: 13px;
+                border-radius: 8px;
+            }
+
+            .card-main-text { font-size: 14px; }
+            .card-sub-text { font-size: 11px; }
+
+            .avatar { margin-left: -15px; width: 55px; height: 55px; border-width: 2px;}
+            .congrats-title { font-size: 28px; }
+
+            /* LE SECRET UX MOBILE : Menu collé en bas (Sticky) */
+            .action-area {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: var(--card-bg);
+                padding: 15px 20px;
+                margin: 0;
+                box-shadow: 0 -4px 15px rgba(0,0,0,0.08);
+                z-index: 100;
+                flex-direction: column-reverse; /* Met l'erreur au-dessus des boutons */
+                align-items: center;
+            }
+
+            .error-message {
+                text-align: center;
+                margin-bottom: 10px;
+                margin-top: 0;
+                font-size: 12px;
+            }
+
+            .nav-buttons {
+                flex-direction: row; /* Forcer côte à côte */
+                gap: 10px;
+            }
+
+            .btn-next, .btn-back {
+                padding: 14px 10px;
+                font-size: 14px;
+                flex: 1; /* Taille égale */
+                text-align: center;
+            }
         }
     </style>
 </head>
@@ -555,10 +572,10 @@
             </div>
             <div class="options-grid" id="gridStep1"></div>
             <div class="action-area">
-                <div class="nav-buttons" style="justify-content: flex-end;">
-                    <button class="btn-next" id="nextBtn1" onclick="validateStep1()">Continuer</button>
+                <div class="error-message" id="errorMsg1">⚠️ Sélectionnez au moins une technologie.</div>
+                <div class="nav-buttons">
+                    <button class="btn-next" id="nextBtn1" onclick="validateStep1()" style="width: 100%; flex: none;">Continuer</button>
                 </div>
-                <div class="error-message" id="errorMsg1">⚠️ Veuillez sélectionner au moins une technologie.</div>
             </div>
         </div>
 
@@ -570,11 +587,11 @@
             </div>
             <div class="options-grid" id="gridStep2"></div>
             <div class="action-area">
+                <div class="error-message" id="errorMsg2">⚠️ Sélectionnez au moins une option.</div>
                 <div class="nav-buttons">
                     <button class="btn-back" onclick="goBackToStep(1)">Retour</button>
                     <button class="btn-next" id="nextBtn2" onclick="validateStep2()">Continuer</button>
                 </div>
-                <div class="error-message" id="errorMsg2">⚠️ Veuillez sélectionner au moins une option.</div>
             </div>
         </div>
 
@@ -586,7 +603,7 @@
             </div>
             <div class="options-grid" id="gridStep3"></div>
             <div class="action-area">
-                <div class="nav-buttons" style="justify-content: flex-start;">
+                <div class="nav-buttons">
                     <button class="btn-back" onclick="goBackToStep(2)">Retour</button>
                 </div>
             </div>
@@ -600,7 +617,7 @@
             </div>
             <div class="options-grid" id="gridStep4" style="grid-template-columns: 1fr;"></div>
             <div class="action-area">
-                <div class="nav-buttons" style="justify-content: flex-start;">
+                <div class="nav-buttons">
                     <button class="btn-back" onclick="goBackToStep(3)">Retour</button>
                 </div>
             </div>
@@ -618,7 +635,7 @@
                 </select>
             </div>
             <div class="action-area">
-                <div class="nav-buttons" style="justify-content: flex-start;">
+                <div class="nav-buttons">
                     <button class="btn-back" onclick="goBackToStep(4)">Retour</button>
                 </div>
             </div>
@@ -655,11 +672,11 @@
             </div>
 
             <div class="action-area">
+                <div class="error-message" id="errorMsg6">⚠️ Choisissez un jour et une heure.</div>
                 <div class="nav-buttons">
                     <button class="btn-back" onclick="goBackToStep(5)">Retour</button>
                     <button class="btn-next" id="nextBtn6" onclick="validateStep6()">Continuer</button>
                 </div>
-                <div class="error-message" id="errorMsg6">⚠️ Veuillez choisir un jour et une heure pour continuer.</div>
             </div>
         </div>
 
@@ -686,11 +703,11 @@
             </div>
 
             <div class="action-area">
+                <div class="error-message" id="errorMsg7">⚠️ Remplissez un nom et un téléphone (10 chiffres).</div>
                 <div class="nav-buttons">
                     <button class="btn-back" onclick="goBackToStep(6)">Retour</button>
                     <button class="btn-next btn-submit" id="submitBtn" onclick="submitFinalForm()">Terminer</button>
                 </div>
-                <div class="error-message" id="errorMsg7">⚠️ Veuillez remplir votre nom et un numéro de téléphone valide (10 chiffres min).</div>
             </div>
         </div>
 
@@ -724,8 +741,8 @@
                 </p>
             </div>
 
-            <div class="action-area" style="align-items: center; margin-top: 10px;">
-                <button class="btn-back" style="background-color: var(--bg-color);" onclick="resetForm()">Retour à l'accueil</button>
+            <div class="action-area" style="position: relative; box-shadow: none; background: transparent; align-items: center; margin-top: 10px;">
+                <button class="btn-back" style="background-color: var(--card-bg);" onclick="resetForm()">Retour à l'accueil</button>
             </div>
         </div>
 
@@ -1069,7 +1086,6 @@
 
         // Réinitialise le formulaire entier pour revenir au début de manière fluide
         function resetForm() {
-            // Vider les variables
             selectedTechs.clear();
             selectedProfs.clear();
             selectedSociete = "";
@@ -1078,34 +1094,33 @@
             selectedDateObj = null;
             selectedTime = null;
 
-            // Déselectionner tout visuellement
             document.querySelectorAll('.option-card.selected').forEach(c => c.classList.remove('selected'));
             document.querySelectorAll('.date-card.selected').forEach(c => c.classList.remove('selected'));
             document.querySelectorAll('.time-slot.selected').forEach(c => c.classList.remove('selected'));
             
-            // Vider les champs texte et le menu déroulant
             document.getElementById('departmentSelect').value = "";
             document.getElementById('userName').value = "";
             document.getElementById('userPhone').value = "";
 
-            // Désactiver les boutons
             document.getElementById('nextBtn1').classList.remove('active');
             document.getElementById('nextBtn2').classList.remove('active');
             document.getElementById('nextBtn6').classList.remove('active');
             document.getElementById('submitBtn').classList.remove('active');
             
-            // Revenir à l'étape 1
             switchStep(8, 1);
+            window.scrollTo(0,0);
         }
 
         function switchStep(oldStep, newStep) {
             document.getElementById('step' + oldStep).classList.remove('active');
             document.getElementById('step' + newStep).classList.add('active');
+            window.scrollTo(0,0); // Remonte tout en haut à chaque changement de page
         }
 
         function goBackToStep(stepNumber) {
             document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
             document.getElementById('step' + stepNumber).classList.add('active');
+            window.scrollTo(0,0);
         }
     </script>
 </body>
