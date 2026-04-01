@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Questionnaire - Découvrez votre solution</title>
+    <style>
+        /* Variables de base inspirées d'une DA premium */
+        :root {
+            --primary-color: #0f172a; 
+            --accent-color: #3b82f6; 
+            --bg-color: #f8fafc; 
+            --card-bg: #ffffff;
+            --text-color: #334155;
+            --border-color: #e2e8f0;
+            --hover-border: #94a3b8;
+            --error-color: #ef4444; 
+            --success-color: #10b981;
+            --success-bg: #f0fdf4;
+            --success-border: #bbf7d0;
+            --success-text: #166534;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        /* En-tête principal */
+        .main-header {
+            text-align: center;
+            margin-bottom: 40px;
+            width: 100%;
+            max-width: 800px;
+            padding: 0 10px;
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        .main-header h1 {
+            color: var(--primary-color);
+            font-size: 36px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            margin-bottom: 8px;
+        }
+
+        .main-header .main-subtitle {
+            color: #475569;
+            font-size: 18px;
+            font-weight: 400;
+        }
+
+        .main-header .main-subtitle strong {
+            color: var(--accent-color);
+            font-weight: 800;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Conteneur principal */
+        .funnel-container {
+            background-color: var(--card-bg);
+            width: 100%;
+            max-width: 800px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Gestion des étapes (Pages) */
+        .step {
+            display: none;
+            flex-direction: column;
+            gap: 30px;
+            animation: fadeInStep 0.4s ease-in-out;
+        }
+
+        .step.active {
+            display: flex;
+        }
+
+        @keyframes fadeInStep {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Barre de progression */
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background-color: var(--border-color);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--accent-color);
+            border-radius: 10px;
+            transition: width 0.4s ease;
+        }
+
+        .question-title {
+            color: var(--primary-color);
+            font-size: 26px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .question-subtitle {
+            text-align: center;
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        /* Grille des choix */
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        /* Style des cartes de sélection */
+        .option-card {
+            background-color: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            font-size: 15px;
+            font-weight: 500;
+            user-select: none;
+            color: var(--primary-color);
+            line-height: 1.4;
+        }
+
+        .option-card:hover {
+            border-color: var(--hover-border);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .option-card.selected {
+            border-color: var(--accent-color);
+            background-color: #eff6ff;
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .card-main-text {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .card-sub-text {
+            font-size: 13px;
+            color: #94a3b8;
+            margin-top: 6px;
+            font-weight: 400;
+        }
+
+        .option-card.selected .card-sub-text {
+            color: #60a5fa; 
+        }
+
+        /* Formulaire */
+        .custom-select-wrapper, .form-group {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-left: 5px;
+        }
+
+        .custom-select, .form-control {
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 16px;
+            font-family: inherit;
+            color: var(--primary-color);
+            background-color: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .custom-select {
+            appearance: none;
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23334155'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 20px;
+        }
+
+        .custom-select:hover, .custom-select:focus, .form-control:focus {
+            border-color: var(--accent-color);
+        }
+
+        .form-control::placeholder {
+            color: #94a3b8;
+        }
+
+        /* --- STYLES ÉTAPE 6 & 8 (Calendrier, Avatars, Confirmation) --- */
+        
+        .congrats-title {
+            font-size: 38px;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 25px;
+            background: linear-gradient(135deg, var(--accent-color), #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+
+        .congrats-subtitle {
+            font-size: 18px;
+            color: var(--primary-color);
+            text-align: center;
+            font-weight: 500;
+            margin-bottom: 40px;
+            line-height: 1.5;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .avatar-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-top: 10px;
+            flex-wrap: wrap; 
+        }
+
+        .avatar {
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
+            border: 3px solid var(--card-bg);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            object-fit: cover;
+            margin-left: -20px;
+            transition: transform 0.2s;
+            background-color: white;
+        }
+
+        .avatar:first-child { margin-left: 0; }
+        .avatar:hover { transform: translateY(-5px); z-index: 10 !important; }
+
+        .booking-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .dates-scroll {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 15px;
+            scrollbar-width: thin;
+            scroll-behavior: smooth;
+        }
+
+        .dates-scroll::-webkit-scrollbar { height: 6px; }
+        .dates-scroll::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
+        .dates-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .dates-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        .date-card {
+            flex: 0 0 auto; 
+            width: 100px;
+            padding: 15px 10px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            background-color: var(--card-bg);
+        }
+
+        .date-card .day-name { font-size: 13px; color: #64748b; text-transform: uppercase; font-weight: 600; }
+        .date-card .day-number { font-size: 22px; color: var(--primary-color); font-weight: 800; }
+        .date-card .month-name { font-size: 13px; color: #64748b; }
+
+        .date-card:hover { border-color: var(--hover-border); }
+        .date-card.selected {
+            border-color: var(--accent-color);
+            background-color: var(--accent-color);
+        }
+        .date-card.selected .day-name, .date-card.selected .day-number, .date-card.selected .month-name { color: white; }
+
+        .times-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+            min-height: 50px; 
+        }
+
+        .time-slot {
+            padding: 12px;
+            border: 2px solid var(--accent-color);
+            color: var(--accent-color);
+            background-color: transparent;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            animation: fadeInStep 0.3s ease-in-out;
+        }
+
+        .time-slot:hover { background-color: #eff6ff; }
+        .time-slot.selected { background-color: var(--accent-color); color: white; }
+
+        /* --- ANIMATION DE SUCCÈS (FESTIVE & ÉLÉGANTE) --- */
+        .success-icon-wrapper {
+            position: relative;
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 20px;
+        }
+
+        .success-icon {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: var(--success-bg);
+            border: 4px solid var(--success-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+            animation: bounceIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .success-icon svg {
+            width: 45px;
+            height: 45px;
+            color: var(--success-color);
+            stroke-dasharray: 100;
+            stroke-dashoffset: 100;
+            animation: dash 0.5s 0.4s ease-in-out forwards;
+        }
+
+        .success-ripple {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            background-color: var(--success-color);
+            border-radius: 50%;
+            z-index: 1;
+            opacity: 0.5;
+            animation: ripple 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes dash {
+            to { stroke-dashoffset: 0; }
+        }
+
+        @keyframes ripple {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+            100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+        }
+
+        /* Styles spécifiques Étape 8 (Confirmation) */
+        .success-box {
+            background-color: var(--success-bg);
+            border: 2px solid var(--success-border);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px auto;
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .success-text {
+            font-size: 16px;
+            color: var(--success-text);
+            font-weight: 500;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .highlight-data {
+            font-size: 18px;
+            font-weight: 800;
+            color: #15803d; 
+        }
+
+        .tip-box {
+            background-color: #eff6ff;
+            border-left: 4px solid var(--accent-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 30px auto;
+            max-width: 600px;
+            text-align: left;
+        }
+
+        /* Zone d'action */
+        .action-area {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            margin-top: 20px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-back {
+            background-color: transparent;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-back:hover {
+            background-color: var(--bg-color);
+            border-color: var(--hover-border);
+        }
+
+        .btn-next {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 16px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, opacity 0.2s;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .btn-next.active {
+            background-color: var(--accent-color); 
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .btn-next.active:hover { background-color: #2563eb; }
+        
+        .btn-submit.active { background-color: var(--success-color); }
+        .btn-submit.active:hover { background-color: #059669; }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+            font-weight: 500;
+            animation: fadeIn 0.3s ease;
+            width: 100%;
+            text-align: right;
+        }
+
+        @media (max-width: 600px) {
+            .main-header h1 { font-size: 28px; }
+            .funnel-container { padding: 20px; }
+            .options-grid { grid-template-columns: 1fr; }
+            .congrats-title { font-size: 32px; }
+            .congrats-subtitle { font-size: 16px; }
+            .nav-buttons { flex-direction: column-reverse; gap: 15px; }
+            .btn-next, .btn-back { width: 100%; justify-content: center; }
+            .avatar { margin-left: -15px; width: 65px; height: 65px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <h1>Mon comparateur de machine</h1>
+        <p class="main-subtitle">trouver ma <em><strong>machine idéale</strong></em> au <em><strong>meilleur prix</strong></em></p>
+    </header>
+
+    <div class="funnel-container">
+        
+        <div id="step1" class="step active">
+            <div><div class="progress-bar"><div class="progress-fill" style="width: 14%;"></div></div></div>
+            <div>
+                <h2 class="question-title">Quel type de technologie recherchez-vous ?</h2>
+                <p class="question-subtitle">Plusieurs sélections possibles.</p>
+            </div>
+            <div class="options-grid" id="gridStep1"></div>
+            <div class="action-area">
+                <div class="nav-buttons" style="justify-content: flex-end;">
+                    <button class="btn-next" id="nextBtn1" onclick="validateStep1()">Continuer</button>
+                </div>
+                <div class="error-message" id="errorMsg1">⚠️ Veuillez sélectionner au moins une technologie.</div>
+            </div>
+        </div>
+
+        <div id="step2" class="step">
+            <div><div class="progress-bar"><div class="progress-fill" style="width: 28%;"></div></div></div>
+            <div>
+                <h2 class="question-title">Je suis :</h2>
+                <p class="question-subtitle">Plusieurs sélections possibles.</p>
+            </div>
+            <div class="options-grid" id="gridStep2"></div>
+            <div class="action-area">
+                <div class="nav-buttons">
+                    <button class="btn-back" onclick="goBackToStep(1)">Retour</button>
+                    <button class="btn-next" id="nextBtn2" onclick="validateStep2()">Continuer</button>
+                </div>
+                <div class="error-message" id="errorMsg2">⚠️ Veuillez sélectionner au moins une option.</div>
+            </div>
+        </div>
+
+        <div id="step3" class="step">
+            <div><div class="progress-bar"><div class="progress-fill" style="width: 42%;"></div></div></div>
+            <div>
+                <h2 class="question-title">Ma société :</h2>
+                <p class="question-subtitle">Sélectionnez une option.</p>
+            </div>
+            <div class="options-grid" id="gridStep3"></div>
+            <div class="action-area">
+                <div class="nav-buttons" style="justify-content: flex-start;">
+                    <button class="btn-back" onclick="goBackToStep(2)">Retour</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="step4" class="step">
+            <div><div class="progress-bar"><div class="progress-fill" style="width: 57%;"></div></div></div>
+            <div>
+                <h2 class="question-title">Mon projet d'acquisition est pour :</h2>
+                <p class="question-subtitle">Sélectionnez une option.</p>
+            </div>
+            <div class="options-grid" id="gridStep4" style="grid-template-columns: 1fr;"></div>
+            <div class="action-area">
+                <div class="nav-buttons" style="justify-content: flex-start;">
+                    <button class="btn-back" onclick="goBackToStep(3)">Retour</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="step5" class="step">
+            <div><div class="progress-bar"><div class="progress-fill" style="width: 71%;"></div></div></div>
+            <div>
+                <h2 class="question-title">Ma localisation :</h2>
+                <p class="question-subtitle">Sélectionnez votre département.</p>
+            </div>
+            <div class="custom-select-wrapper">
+                <select id="departmentSelect" class="custom-select" onchange="handleDeptSelection()">
+                    <option value="" disabled selected>Choisir un département...</option>
+                </select>
+            </div>
+            <div class="action-area">
+                <div class="nav-buttons" style="justify-content: flex-start;">
+                    <button class="btn-back" onclick="goBackToStep(4)">Retour</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="step6" class="step">
+            <div>
+                <div class="progress-bar"><div class="progress-fill" style="width: 85%;"></div></div>
+            </div>
+            
+            <div>
+                <h2 class="congrats-title">Félicitation ! 🎉</h2>
+                <p class="congrats-subtitle">Réserver un échange avec un expert médico-esthétique pour qu'il puisse vous transmettre le résultat</p>
+                
+                <div class="avatar-group">
+                    <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&h=150&fit=crop&crop=faces" alt="Expert 1" class="avatar" style="z-index: 7;">
+                    <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=150&h=150&fit=crop&crop=faces" alt="Expert 2" class="avatar" style="z-index: 6;">
+                    <img src="https://images.pexels.com/photos/5452293/pexels-photo-5452293.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop&crop=faces" alt="Expert 3" class="avatar" style="z-index: 5;">
+                    <img src="https://images.pexels.com/photos/5215024/pexels-photo-5215024.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop&crop=faces" alt="Experte 4" class="avatar" style="z-index: 4;">
+                    <img src="https://images.unsplash.com/photo-1527613426441-4da17471b66d?w=150&h=150&fit=crop&crop=faces" alt="Experte 5" class="avatar" style="z-index: 3;">
+                    <img src="https://images.pexels.com/photos/4173251/pexels-photo-4173251.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop&crop=faces" alt="Expert 6" class="avatar" style="z-index: 2;">
+                    <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=150&h=150&fit=crop&crop=faces" alt="Expert 7" class="avatar" style="z-index: 1;">
+                </div>
+            </div>
+
+            <div class="booking-container">
+                <p style="font-weight: 600; color: var(--primary-color);">1. Choisissez un jour :</p>
+                <div class="dates-scroll" id="datesContainer"></div>
+
+                <p style="font-weight: 600; color: var(--primary-color); margin-top: 10px;">2. Choisissez une heure :</p>
+                <div class="times-grid" id="timesContainer">
+                    <p style="color: #64748b; font-size: 14px; grid-column: 1/-1;">Veuillez d'abord sélectionner un jour.</p>
+                </div>
+            </div>
+
+            <div class="action-area">
+                <div class="nav-buttons">
+                    <button class="btn-back" onclick="goBackToStep(5)">Retour</button>
+                    <button class="btn-next" id="nextBtn6" onclick="validateStep6()">Continuer</button>
+                </div>
+                <div class="error-message" id="errorMsg6">⚠️ Veuillez choisir un jour et une heure pour continuer.</div>
+            </div>
+        </div>
+
+        <div id="step7" class="step">
+            <div>
+                <div class="progress-bar"><div class="progress-fill" style="width: 100%; background-color: var(--success-color);"></div></div>
+            </div>
+            
+            <div>
+                <h2 class="question-title">Dernière étape !</h2>
+                <p class="question-subtitle">À qui l'expert doit-il annoncer les résultats ?</p>
+            </div>
+
+            <div style="width: 100%; padding-top: 20px;">
+                <div class="form-group">
+                    <label for="userName">Nom / Prénom</label>
+                    <input type="text" id="userName" class="form-control" placeholder="Ex: Jean Dupont" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="userPhone">Numéro de téléphone</label>
+                    <input type="tel" id="userPhone" class="form-control" placeholder="06 12 34 56 78" required>
+                </div>
+            </div>
+
+            <div class="action-area">
+                <div class="nav-buttons">
+                    <button class="btn-back" onclick="goBackToStep(6)">Retour</button>
+                    <button class="btn-next btn-submit" id="submitBtn" onclick="submitFinalForm()">Terminer</button>
+                </div>
+                <div class="error-message" id="errorMsg7">⚠️ Veuillez remplir votre nom et un numéro de téléphone valide (10 chiffres min).</div>
+            </div>
+        </div>
+
+        <div id="step8" class="step" style="text-align: center;">
+            
+            <div class="success-icon-wrapper">
+                <div class="success-ripple"></div>
+                <div class="success-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+            </div>
+
+            <h2 class="congrats-title" style="font-size: 32px; margin-bottom: 10px;">Vous avez terminé !</h2>
+            <p class="question-subtitle" style="font-size: 16px;">Votre demande a bien été prise en compte.</p>
+
+            <div class="success-box">
+                <p class="success-text">
+                    L'un de nos experts vous joindra le<br>
+                    <span class="highlight-data" id="confirmDate">...</span> à <span class="highlight-data" id="confirmTime">...</span><br>
+                    au <span style="font-weight: 700; color: var(--text-color);" id="confirmPhone">...</span>
+                </p>
+            </div>
+
+            <p style="font-size: 18px; font-weight: 500; color: var(--primary-color); margin-top: 10px;">Au plaisir d'échanger avec vous.</p>
+
+            <div class="tip-box">
+                <p style="color: #1e3a8a; font-size: 15px; margin: 0; line-height: 1.5;">
+                    💡 <strong>Astuce :</strong> N'hésitez pas à venir au rendez-vous avec un maximum de questions, nous sommes là pour ça.
+                </p>
+            </div>
+
+            <div class="action-area" style="align-items: center; margin-top: 10px;">
+                <button class="btn-back" style="background-color: var(--bg-color);" onclick="resetForm()">Retour à l'accueil</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- DONNÉES DE BASE ---
+        const technologies = [
+            "Laser épilation définitive", "Lumière pulsée (IPL)", "Cryolipolyse", 
+            "Radiofréquence", "Soins Visage / Corps", "Anti-Âge", "Hifu", 
+            "Massage / Spa", "Détatouage", "Électrostimulation", "Photothérapie LED", 
+            "Pressothérapie", "Cavitation", "Électrolyse / Thermolyse", "Diagnostic", 
+            "Ameublement", "Autres"
+        ];
+        
+        const professions = [
+            "Esthéticienne", "Infirmier(-ère)", "Médecin", 
+            "Kinésithérapeute", "Entrepreneur / Investisseur", "Autre"
+        ];
+        
+        const societes = ["En création", "- de 1 an", "+ de 1 an"];
+        
+        const projets = [
+            { text: "Maintenant", sub: "(en sachant que les offres durant le congrès sont les plus intéressantes de l'année 😉)" },
+            { text: "0 à 6 mois", sub: null },
+            { text: "+ de 6 mois", sub: null }
+        ];
+        
+        const departements = [
+            "01 - Ain", "02 - Aisne", "03 - Allier", "04 - Alpes-de-Haute-Provence", "05 - Hautes-Alpes", "06 - Alpes-Maritimes", "07 - Ardèche", "08 - Ardennes", "09 - Ariège", "10 - Aube",
+            "11 - Aude", "12 - Aveyron", "13 - Bouches-du-Rhône", "14 - Calvados", "15 - Cantal", "16 - Charente", "17 - Charente-Maritime", "18 - Cher", "19 - Corrèze", "2A - Corse-du-Sud",
+            "2B - Haute-Corse", "21 - Côte-d'Or", "22 - Côtes-d'Armor", "23 - Creuse", "24 - Dordogne", "25 - Doubs", "26 - Drôme", "27 - Eure", "28 - Eure-et-Loir", "29 - Finistère",
+            "30 - Gard", "31 - Haute-Garonne", "32 - Gers", "33 - Gironde", "34 - Hérault", "35 - Ille-et-Vilaine", "36 - Indre", "37 - Indre-et-Loire", "38 - Isère", "39 - Jura",
+            "40 - Landes", "41 - Loir-et-Cher", "42 - Loire", "43 - Haute-Loire", "44 - Loire-Atlantique", "45 - Loiret", "46 - Lot", "47 - Lot-et-Garonne", "48 - Lozère", "49 - Maine-et-Loire",
+            "50 - Manche", "51 - Marne", "52 - Haute-Marne", "53 - Mayenne", "54 - Meurthe-et-Moselle", "55 - Meuse", "56 - Morbihan", "57 - Moselle", "58 - Nièvre", "59 - Nord",
+            "60 - Oise", "61 - Orne", "62 - Pas-de-Calais", "63 - Puy-de-Dôme", "64 - Pyrénées-Atlantiques", "65 - Hautes-Pyrénées", "66 - Pyrénées-Orientales", "67 - Bas-Rhin", "68 - Haut-Rhin", "69 - Rhône",
+            "70 - Haute-Saône", "71 - Saône-et-Loire", "72 - Sarthe", "73 - Savoie", "74 - Haute-Savoie", "75 - Paris", "76 - Seine-Maritime", "77 - Seine-et-Marne", "78 - Yvelines", "79 - Deux-Sèvres",
+            "80 - Somme", "81 - Tarn", "82 - Tarn-et-Garonne", "83 - Var", "84 - Vaucluse", "85 - Vendée", "86 - Vienne", "87 - Haute-Vienne", "88 - Vosges", "89 - Yonne",
+            "90 - Territoire de Belfort", "91 - Essonne", "92 - Hauts-de-Seine", "93 - Seine-Saint-Denis", "94 - Val-de-Marne", "95 - Val-d'Oise", "971 - Guadeloupe", "972 - Martinique", "973 - Guyane", "974 - La Réunion", "976 - Mayotte"
+        ];
+
+        const baseTimes = ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00"];
+
+        // --- ÉTATS ---
+        let selectedTechs = new Set();
+        let selectedProfs = new Set();
+        let selectedSociete = ""; 
+        let selectedProjet = "";
+        let selectedDept = "";
+        let selectedDateObj = null; 
+        let selectedTime = null;
+
+        // --- ÉTAPE 1 ---
+        const grid1 = document.getElementById('gridStep1');
+        const nextBtn1 = document.getElementById('nextBtn1');
+        const errorMsg1 = document.getElementById('errorMsg1');
+        
+        technologies.forEach(tech => {
+            const card = document.createElement('div');
+            card.className = 'option-card';
+            card.textContent = tech;
+            
+            card.addEventListener('click', () => {
+                if (selectedTechs.has(tech)) {
+                    selectedTechs.delete(tech);
+                    card.classList.remove('selected');
+                } else {
+                    selectedTechs.add(tech);
+                    card.classList.add('selected');
+                }
+                
+                if (selectedTechs.size > 0) {
+                    nextBtn1.classList.add('active');
+                    errorMsg1.style.display = 'none';
+                } else {
+                    nextBtn1.classList.remove('active');
+                }
+            });
+            grid1.appendChild(card);
+        });
+
+        // --- ÉTAPE 2 ---
+        const grid2 = document.getElementById('gridStep2');
+        const nextBtn2 = document.getElementById('nextBtn2');
+        const errorMsg2 = document.getElementById('errorMsg2');
+        
+        professions.forEach(prof => {
+            const card = document.createElement('div');
+            card.className = 'option-card';
+            card.textContent = prof;
+            
+            card.addEventListener('click', () => {
+                if (selectedProfs.has(prof)) {
+                    selectedProfs.delete(prof);
+                    card.classList.remove('selected');
+                } else {
+                    selectedProfs.add(prof);
+                    card.classList.add('selected');
+                }
+                
+                if (selectedProfs.size > 0) {
+                    nextBtn2.classList.add('active');
+                    errorMsg2.style.display = 'none';
+                } else {
+                    nextBtn2.classList.remove('active');
+                }
+            });
+            grid2.appendChild(card);
+        });
+
+        // --- ÉTAPE 3 ---
+        const grid3 = document.getElementById('gridStep3');
+        societes.forEach(soc => {
+            const card = document.createElement('div');
+            card.className = 'option-card';
+            card.textContent = soc;
+            
+            card.addEventListener('click', () => {
+                document.querySelectorAll('#gridStep3 .option-card').forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+                selectedSociete = soc;
+                setTimeout(validateStep3, 300); 
+            });
+            grid3.appendChild(card);
+        });
+
+        // --- ÉTAPE 4 ---
+        const grid4 = document.getElementById('gridStep4');
+        projets.forEach(proj => {
+            const card = document.createElement('div');
+            card.className = 'option-card';
+            
+            let contentHtml = `<span class="card-main-text">${proj.text}</span>`;
+            if (proj.sub) {
+                contentHtml += `<span class="card-sub-text">${proj.sub}</span>`;
+            }
+            card.innerHTML = contentHtml;
+            
+            card.addEventListener('click', () => {
+                document.querySelectorAll('#gridStep4 .option-card').forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+                selectedProjet = proj.text;
+                setTimeout(validateStep4, 300); 
+            });
+            grid4.appendChild(card);
+        });
+
+        // --- ÉTAPE 5 ---
+        const deptSelect = document.getElementById('departmentSelect');
+        departements.forEach(dept => {
+            const option = document.createElement('option');
+            option.value = dept;
+            option.textContent = dept;
+            deptSelect.appendChild(option);
+        });
+        
+        function handleDeptSelection() {
+            selectedDept = deptSelect.value;
+            if (selectedDept) {
+                setTimeout(validateStep5, 300);
+            }
+        }
+
+        // --- ÉTAPE 6 (CALENDRIER) ---
+        const datesContainer = document.getElementById('datesContainer');
+        const timesContainer = document.getElementById('timesContainer');
+        const nextBtn6 = document.getElementById('nextBtn6');
+        const errorMsg6 = document.getElementById('errorMsg6');
+
+        function generateCalendarDays() {
+            let currentDateIterator = new Date();
+            let daysGenerated = 0;
+            const targetDays = 20; 
+
+            const jours = ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"];
+            const mois = ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin", "Juil", "Aoû", "Sep", "Oct", "Nov", "Déc"];
+
+            let isFirstAvailableDay = true;
+
+            while (daysGenerated < targetDays) {
+                if (currentDateIterator.getDay() !== 0 && currentDateIterator.getDay() !== 6) {
+                    
+                    const dateCard = document.createElement('div');
+                    dateCard.className = 'date-card';
+                    
+                    let dayLabel = jours[currentDateIterator.getDay()];
+                    if (isFirstAvailableDay && currentDateIterator.toDateString() === new Date().toDateString()) {
+                        dayLabel = "Auj.";
+                    }
+
+                    dateCard.innerHTML = `
+                        <span class="day-name">${dayLabel}</span>
+                        <span class="day-number">${currentDateIterator.getDate()}</span>
+                        <span class="month-name">${mois[currentDateIterator.getMonth()]}</span>
+                    `;
+
+                    let specificDate = new Date(currentDateIterator);
+
+                    dateCard.addEventListener('click', () => {
+                        document.querySelectorAll('.date-card').forEach(c => c.classList.remove('selected'));
+                        dateCard.classList.add('selected');
+                        
+                        selectedDateObj = specificDate;
+                        selectedTime = null; 
+                        checkStep6Validation();
+                        renderTimes(specificDate);
+                    });
+
+                    datesContainer.appendChild(dateCard);
+                    daysGenerated++;
+                    isFirstAvailableDay = false;
+                }
+                currentDateIterator.setDate(currentDateIterator.getDate() + 1);
+            }
+        }
+
+        function renderTimes(dateObj) {
+            timesContainer.innerHTML = ''; 
+            
+            let now = new Date();
+            let isToday = dateObj.toDateString() === now.toDateString();
+            let currentHour = now.getHours();
+
+            let timesAdded = 0;
+
+            baseTimes.forEach(timeStr => {
+                let [hourStr, minStr] = timeStr.split(':');
+                let slotHour = parseInt(hourStr);
+
+                if (isToday && slotHour <= currentHour) {
+                    return; 
+                }
+
+                timesAdded++;
+                const timeSlot = document.createElement('button');
+                timeSlot.className = 'time-slot';
+                timeSlot.textContent = timeStr;
+                
+                timeSlot.addEventListener('click', () => {
+                    document.querySelectorAll('.time-slot').forEach(c => c.classList.remove('selected'));
+                    timeSlot.classList.add('selected');
+                    selectedTime = timeStr;
+                    checkStep6Validation();
+                });
+                timesContainer.appendChild(timeSlot);
+            });
+
+            if (timesAdded === 0) {
+                timesContainer.innerHTML = '<p style="color: #ef4444; font-size: 14px; grid-column: 1/-1; font-weight: 500;">Tous les créneaux pour aujourd\'hui sont passés. Veuillez choisir un autre jour.</p>';
+            }
+        }
+
+        function checkStep6Validation() {
+            if (selectedDateObj && selectedTime) {
+                nextBtn6.classList.add('active');
+                errorMsg6.style.display = 'none';
+            } else {
+                nextBtn6.classList.remove('active');
+            }
+        }
+
+        // --- ÉTAPE 7 (FORMULAIRE) ---
+        const nameInput = document.getElementById('userName');
+        const phoneInput = document.getElementById('userPhone');
+        const submitBtn = document.getElementById('submitBtn');
+        const errorMsg7 = document.getElementById('errorMsg7');
+
+        function checkFinalForm() {
+            const nameVal = nameInput.value.trim();
+            const phoneDigits = phoneInput.value.replace(/\D/g, '').length;
+
+            if (nameVal.length > 0 && phoneDigits >= 10) {
+                submitBtn.classList.add('active');
+                errorMsg7.style.display = 'none';
+            } else {
+                submitBtn.classList.remove('active');
+            }
+        }
+
+        nameInput.addEventListener('input', checkFinalForm);
+        phoneInput.addEventListener('input', checkFinalForm);
+
+        // --- GESTION DE LA NAVIGATION ---
+        
+        function validateStep1() {
+            if (selectedTechs.size === 0) { errorMsg1.style.display = 'block'; return; }
+            switchStep(1, 2);
+        }
+
+        function validateStep2() {
+            if (selectedProfs.size === 0) { errorMsg2.style.display = 'block'; return; }
+            switchStep(2, 3);
+        }
+
+        function validateStep3() { switchStep(3, 4); }
+        function validateStep4() { switchStep(4, 5); }
+
+        function validateStep5() {
+            switchStep(5, 6);
+            if(!document.querySelector('.date-card')) {
+                generateCalendarDays();
+            }
+        }
+
+        function validateStep6() {
+            if (!selectedDateObj || !selectedTime) { errorMsg6.style.display = 'block'; return; }
+            switchStep(6, 7);
+        }
+
+        function submitFinalForm() {
+            const phoneDigits = phoneInput.value.replace(/\D/g, '').length;
+            if (nameInput.value.trim() === '' || phoneDigits < 10) {
+                errorMsg7.style.display = 'block';
+                return;
+            }
+            
+            const formattedDate = `${selectedDateObj.getDate() < 10 ? '0'+selectedDateObj.getDate() : selectedDateObj.getDate()}/${(selectedDateObj.getMonth() + 1) < 10 ? '0'+(selectedDateObj.getMonth() + 1) : (selectedDateObj.getMonth() + 1)}/${selectedDateObj.getFullYear()}`;
+
+            // Remplissage des données sur la page de confirmation
+            document.getElementById('confirmDate').textContent = formattedDate;
+            document.getElementById('confirmTime').textContent = selectedTime;
+            document.getElementById('confirmPhone').textContent = phoneInput.value.trim();
+
+            const finalData = {
+                nom: nameInput.value.trim(),
+                telephone: phoneInput.value.trim(),
+                technologies: Array.from(selectedTechs),
+                profession: Array.from(selectedProfs),
+                societe: selectedSociete,
+                projet: selectedProjet,
+                departement: selectedDept,
+                rdv_date: formattedDate,
+                rdv_heure: selectedTime
+            };
+            
+            console.log("🚀 DONNÉES PRÊTES POUR ENVOI :", finalData);
+            
+            // Passage à la page de confirmation
+            switchStep(7, 8);
+        }
+
+        // Réinitialise le formulaire entier pour revenir au début de manière fluide
+        function resetForm() {
+            // Vider les variables
+            selectedTechs.clear();
+            selectedProfs.clear();
+            selectedSociete = "";
+            selectedProjet = "";
+            selectedDept = "";
+            selectedDateObj = null;
+            selectedTime = null;
+
+            // Déselectionner tout visuellement
+            document.querySelectorAll('.option-card.selected').forEach(c => c.classList.remove('selected'));
+            document.querySelectorAll('.date-card.selected').forEach(c => c.classList.remove('selected'));
+            document.querySelectorAll('.time-slot.selected').forEach(c => c.classList.remove('selected'));
+            
+            // Vider les champs texte et le menu déroulant
+            document.getElementById('departmentSelect').value = "";
+            document.getElementById('userName').value = "";
+            document.getElementById('userPhone').value = "";
+
+            // Désactiver les boutons
+            document.getElementById('nextBtn1').classList.remove('active');
+            document.getElementById('nextBtn2').classList.remove('active');
+            document.getElementById('nextBtn6').classList.remove('active');
+            document.getElementById('submitBtn').classList.remove('active');
+            
+            // Revenir à l'étape 1
+            switchStep(8, 1);
+        }
+
+        function switchStep(oldStep, newStep) {
+            document.getElementById('step' + oldStep).classList.remove('active');
+            document.getElementById('step' + newStep).classList.add('active');
+        }
+
+        function goBackToStep(stepNumber) {
+            document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
+            document.getElementById('step' + stepNumber).classList.add('active');
+        }
+    </script>
+</body>
+</html>
